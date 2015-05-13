@@ -7,6 +7,8 @@ import scala.scalajs.js.UndefOr.any2undefOrA
 
 import com.greencatsoft.angularjs.injectable
 
+import scala.scalajs.js.annotation.JSBracketAccess
+
 @injectable("$routeProvider")
 trait RouteProvider extends js.Object {
 
@@ -79,4 +81,52 @@ trait RouteInfo extends js.Object {
   var pathParams: js.Array[js.Any] = js.native
 
   var scope: Scope = js.native
+
+  var locals: js.Object = js.native
+}
+
+/**
+ * The \$routeParams service is an object that will have one key per url parameter.
+ * The \$routeParams is a perfect way to provide your controllers or other services with
+ * the individual parts of the navigated url.<br/>
+ * If you had a url on your state of:
+ *
+ * url: '/users/:id/details/{type}/{repeat:[0-9]+}?from&to'
+ *
+ * Then you navigated your browser to:
+ *
+ * '/users/123/details//0'
+ *
+ * Your \$routeParams object would be
+ *
+ * { id:'123', type:'', repeat:'0' }
+ *
+ * Then you navigated your browser to:
+ *
+ * '/users/123/details/default/0?from=there&to=here'
+ *
+ * Your \$routeParams object would be
+ *
+ * { id:'123', type:'default', repeat:'0', from:'there', to:'here' }
+ */
+@injectable("$routeParams")
+trait RouteParams extends js.Object {
+  /**
+   * Get the parameter value from its name.<br/>
+   * If you have a \$routeParams object { id:'123', type:'default', repeat:'0', from:'there', to:'here' },
+   * then to get the value of the "type" key, you should call \$stateParams("type").
+   */
+  @JSBracketAccess
+  def apply(key: String): js.Any = js.native
+  @JSBracketAccess
+  def update(key: String, v: js.Any): Unit = js.native
+}
+
+@injectable("$route")
+trait RouteService extends js.Object {
+  var current: RouteInfo = js.native
+  def reload(): Unit = js.native
+  // TODO routes object is a JSBracketAccess that contain all routes
+  var routes: js.Object = js.native
+  // TODO map updateParams function to javascript
 }
